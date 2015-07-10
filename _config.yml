@@ -6,7 +6,7 @@
 name: Tzahi Vidas
 
 # Short bio or description (displayed in the header)
-description: Web Developer from Somewhere
+description: Something something developer
 
 # URL of your avatar or profile pic (you could use your GitHub profile pic)
 avatar: http://www.gravatar.com/avatar/ea502c709e1f339f2a353d52d22af9d8.png
@@ -22,7 +22,7 @@ footer-links:
   facebook:
   flickr:
   github: kazuar
-  instagram:
+  instagram: kazuar
   linkedin:
   pinterest:
   rss: # just type anything here for a working RSS icon, make sure you set the "url" above!
