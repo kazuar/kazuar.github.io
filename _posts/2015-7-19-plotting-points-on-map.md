@@ -4,7 +4,7 @@ title: Plotting geo coordinates on map
 comments: true
 ---
 
-In case you want to plot geo coordinates on a map...
+In case you want to plot geo coordinates on a map:
 
 In this example, we want to plot geo coordinates on a map of US states.
 
