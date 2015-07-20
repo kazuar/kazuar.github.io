@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Oh joy...
+comments: true
 ---
 
 Well, here we are.
