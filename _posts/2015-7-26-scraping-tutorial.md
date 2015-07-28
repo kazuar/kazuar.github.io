@@ -33,7 +33,7 @@ You will see the following page (perform logout in case you're already logged in
 
 In this section we will build a dictionary that will hold our details for performing login:
 
-1. Right click on the "Username or email" field and select "inspect element". We will use the value of the "name" attribue for this input which is "username". "username" will be the key and the our user name / email will be the value (on other sites this might be "email", "user_name", "login", etc.).
+1. Right click on the "Username or email" field and select "inspect element". We will use the value of the "name" attribue for this input which is "username". "username" will be the key and our user name / email will be the value (on other sites this might be "email", "user_name", "login", etc.).
 ![scrape_username]({{ site.baseurl }}/images/scrape_username.png)
 ![login_source_html]({{ site.baseurl }}/images/login_source_html.png)
 2. Right click on the "Password" field and select "inspect element". In the script we will need to use the value of the "name" attribue for this input which is "password". "password" will be the key in the dictionary and our password will be the value (on other sites this might be "user_password", "login_password", "pwd", etc.).
@@ -56,6 +56,12 @@ Keep in mind that this is the specific case for this site. While this login form
 
 ## Perform login to the site
 
+For this script we will only need to import the following:
+{% highlight python %}
+import requests
+from lxml import html
+{% endhighlight %}
+
 First, we would like to create our [session object](http://docs.python-requests.org/en/latest/user/advanced/). This object will allow us to persist the login session across all our requests.
 
 {% highlight python %}
@@ -72,6 +78,8 @@ result = session_requests.get(login_url)
 tree = html.fromstring(result.text)
 authenticity_token = list(set(tree.xpath("//input[@name='csrfmiddlewaretoken']/@value")))[0]
 {% endhighlight %}
+
+** More about xpath and lxml can be found [here](http://lxml.de/xpathxslt.html).
 
 Next, we would like to perform the login phase.
 In this phase, we send a POST request to the login url. 
@@ -105,6 +113,13 @@ bucket_elems = tree.findall(".//span[@class='repo-name']/")
 bucket_names = [bucket.text_content.replace("\n", "").strip() for bucket in bucket_elems]
 
 print bucket_names
+{% endhighlight %}
+
+You can also validate the requests results by checking the returned status code from each request.
+for example:
+{% highlight python %}
+result.ok # Will tell us if the last request was ok
+result.status_code # Will give us the status from the last request
 {% endhighlight %}
 
 That's it.
