@@ -106,7 +106,7 @@ result = session_requests.get(
 )
 {% endhighlight %}
 
-In order to test this, let's scrape the list of projects from the bibucket dashboard page.
+In order to test this, let's scrape the list of projects from the bitbucket dashboard page.
 Again, we will use xpath to find the target elements, clean up the text from new-lines and spaces and print out the results. If everything went OK, the output should be the list of buckets / project that are in your bitbucket account.
 
 {% highlight python %}
@@ -118,6 +118,8 @@ print bucket_names
 {% endhighlight %}
 
 You can also validate the requests results by checking the returned status code from each request.
+It won't always let you know that the login phase was successful but it can be used as an indicator.
+
 for example:
 {% highlight python %}
 result.ok # Will tell us if the last request was ok
