@@ -39,7 +39,7 @@ In this section we will build a dictionary that will hold our details for perfor
 2. Right click on the "Password" field and select "inspect element". In the script we will need to use the value of the "name" attribue for this input which is "password". "password" will be the key in the dictionary and our password will be the value (on other sites this might be "user_password", "login_password", "pwd", etc.).
 ![scrape_password]({{ site.baseurl }}/images/scrape_password.png)
 ![password_source_html]({{ site.baseurl }}/images/password_source_html.png)
-3. In the page source, search for a hidden input tag called "csrfmiddlewaretoken". "csrfmiddlewaretoken" will be the key and value will be the hidden input value (on other sites this might be a hidden input with the name "csrf_token", "authentication_token", etc.). For example "Vy00PE3Ga6aISwKBrPn72SFml00IcUV8".
+3. In the page source, search for a hidden input tag called "csrfmiddlewaretoken". "csrfmiddlewaretoken" will be the key and value will be the hidden input value (on other sites this might be a hidden input with the name "csrf_token", "authentication_token", etc.). For example "Vy00PE3Ra6aISwKBrPn72SFml00IcUV8".
 ![scrape_csrf]({{ site.baseurl }}/images/scrape_csrf.png)
 ![csrf_token_source_html]({{ site.baseurl }}/images/csrf_token_source_html.png)
 
@@ -48,7 +48,7 @@ We will end up with a dict that will look like this:
 payload = {
 	"username": "<USER NAME>", 
 	"password": "<PASSWORD>", 
-	"csrfmiddlewaretoken": "Vy00PE3Ga6aISwKBrPn72SFml00IcUV8"
+	"csrfmiddlewaretoken": "<CSRF_TOKEN>"
 }
 {% endhighlight %}
 
