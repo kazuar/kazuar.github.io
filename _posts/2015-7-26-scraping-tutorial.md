@@ -54,7 +54,7 @@ payload = {
 
 Keep in mind that this is the specific case for this site. While this login form is simple, other sites might require us to check the request log of the browser and find the relevant keys and values that we should use for the login step.
 
-## Perform login to the site
+## Step 3: Perform login to the site
 
 For this script we will only need to import the following:
 {% highlight python %}
@@ -93,6 +93,8 @@ result = session_requests.post(
 	headers = dict(referer=login_url)
 )
 {% endhighlight %}
+
+## Step 3: Scrape content
 
 Now, that we were able to successfully login, we will perform the actual scraping from [bitbucket dashboard page](https://bitbucket.org/dashboard/overview)
 
