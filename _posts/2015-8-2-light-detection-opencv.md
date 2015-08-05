@@ -138,10 +138,10 @@ We need to find the circles in the new image, but first we will need to convert 
 
 For detecting the circles in the image we will use the following parameters:
 
-1. The image converted to grayscale
-2. HOUGH_GRADIENT is the circle detection method (currently the only one)
+1. The image converted to grayscale.
+2. HOUGH_GRADIENT is the circle detection method (currently the only one).
 3. The inverse ratio of resolution. In this case, 1.2 will be used.
-4. The minDist will be 100 - we want to make sure that we don't accidentaly detect false positive circles
+4. The minDist will be 100 - we want to make sure that we don't accidentaly detect false positive circles.
 
 {% highlight python %}
 # Convert image to grayscale
