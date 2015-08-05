@@ -141,7 +141,7 @@ For detecting the circles in the image we will use the following parameters (fro
 
 1. Grayscale input image
 2. HOUGH_GRADIENT is the circle detection method (currently the only one).
-3. Inverse ratio of the accumulator resolution to the image resolution.. In this case, 1.2.
+3. Inverse ratio of the accumulator resolution to the image resolution. In this case, 1.2.
 4. Minimum distance between the centers of the detected circles. In this case, 100.
 
 {% highlight python %}
