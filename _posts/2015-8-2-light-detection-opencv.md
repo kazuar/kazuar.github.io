@@ -137,12 +137,12 @@ Which will have the following result:
 Now we have a picture with only the red hues in it, and we will want to identify whether the light is on (there is a circle of red hues) or the light is off (there is no circle).
 We need to find the circles in the new image, but first we will need to convert the image to grayscale (since the input for HoughCircles is a grayscale image).
 
-For detecting the circles in the image we will use the following parameters:
+For detecting the circles in the image we will use the following parameters (from [OpenCV HoughCircles](http://docs.opencv.org/3.0-beta/modules/imgproc/doc/feature_detection.html#houghcircles)):
 
-1. The image converted to grayscale.
+1. Grayscale input image
 2. HOUGH_GRADIENT is the circle detection method (currently the only one).
-3. The inverse ratio of resolution. In this case, 1.2 will be used.
-4. The minDist will be 100 - we want to make sure that we don't accidentaly detect false positive circles.
+3. Inverse ratio of the accumulator resolution to the image resolution.. In this case, 1.2.
+4. Minimum distance between the centers of the detected circles. In this case, 100.
 
 {% highlight python %}
 # Convert image to grayscale
