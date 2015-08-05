@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Did I leave the over on?" with OpenCV and Python
+title: Did I leave the over on? (with OpenCV and Python)
 comments: true
 ---
 
