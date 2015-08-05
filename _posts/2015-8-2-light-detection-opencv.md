@@ -34,7 +34,7 @@ When the red light is on, the <span style="color:red">oven</span> is on:
 
 ![oven_on]({{ site.baseurl }}/images/oven_on.jpg)
 
-When the red light is off, the <span style="color:red">over</span> is off:
+When the red light is off, the <span style="color:red">oven</span> is off:
 
 ![oven_off]({{ site.baseurl }}/images/oven_off.jpg)
 
