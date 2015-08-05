@@ -70,7 +70,8 @@ image = cv2.imread(image_path)
 {% endhighlight %}
 
 ## Reducing noise in the image
-We will want to smooth the input image in order to reduce the noise in the image. This will make it easier to detect objects in the image. For medianBlur we will use aperture size of 3, higher value will mean that the image will be more blurry:
+We will want to smooth the input image in order to reduce the noise in the image. This will make it easier to detect objects in the image. For medianBlur we will use aperture size of 3. A higher value means that the image will be more blurry.
+
 {% highlight python %}
 blur_image = cv2.medianBlur(image, 3)
 {% endhighlight %}
