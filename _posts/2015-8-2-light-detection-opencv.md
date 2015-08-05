@@ -12,7 +12,7 @@ This question will sometimes pop up at the most inconvenient times.
 
 Sometimes when you just left your house.<br/>
 Sometimes on your way to work.<br/>
-Sometimes on a plane while you're on your way to a long vacation...<br/>
+Sometimes on a plane while you're on your way for a long vacation...<br/>
 
 There are different solutions for this problem:
 
