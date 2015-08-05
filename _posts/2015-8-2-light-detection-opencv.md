@@ -8,9 +8,9 @@ comments: true
 
 ![did_i_leave_the_oven_on]({{ site.baseurl }}/images/did_i_leave_the_oven_on.jpg)
 
-This quetion will sometimes pop up at the most inconvenient times.
+This question will sometimes pop up at the most inconvenient times.
 
-Sometimve when you just left your house.<br/>
+Sometimes when you just left your house.<br/>
 Sometimes on your way to work.<br/>
 Sometimes on a plane while you're on your way to a long vacation...<br/>
 
@@ -18,7 +18,7 @@ There are different solutions for this problem:
 
 1. The [rubber band method](http://www.apartmenttherapy.com/did-i-leave-the-oven-on-try-th-131769)
 2. Saying / singing it out loud (like [Samuel L. Jackson](https://www.youtube.com/watch?v=vPN4XjrwD78))
-3. Labeling your appliances or even making a checklist and include the <span style="color:red">oven</span> before leaving the house to a long vacation.
+3. Labeling your appliances or even making a checklist that includes the <span style="color:red">oven</span> before leaving the house to a long vacation.
 
 Or, we can do something better...
 
@@ -70,7 +70,7 @@ image = cv2.imread(image_path)
 {% endhighlight %}
 
 ## Reducing noise in the image
-We will want to smooth the input image in order to reduce the noise in the image. This will make it easier to detect objects in the image:
+We will want to smooth the input image in order to reduce the noise in the image. This will make it easier to detect objects in the image. For medianBlur we will use aperture size of 3, higher value will mean that the image will be more blurry:
 {% highlight python %}
 blur_image = cv2.medianBlur(image, 3)
 {% endhighlight %}
@@ -97,7 +97,7 @@ In order to decide on the color that we want to detect, we can look at the histo
 ![image_color_hist]({{ site.baseurl }}/images/image_color_hist.png)
 ![light_mask]({{ site.baseurl }}/images/light_mask.png)
 
-We can see that the color red is dominant in the image. There are two peaks of red color - one in the low range and one in the high range. These color values are translated to hue are in the range of 0 to 10 and 160 to 180 (for the color red).
+We can see that the color red is dominant in the image. There are two peaks of red color - one in the low range and one in the high range. These color values are translated to hue in the range of 0 to 10 and 160 to 180 (for the color red).
 
 For each hue range we will create a mask on the HSV image and remove everything that isn't in the selected range of the required color.
 
@@ -144,9 +144,9 @@ image_gray = cv2.cvtColor(full_image, cv2.COLOR_BGR2GRAY)
 circles = cv2.HoughCircles(image_gray, 3, 1.2, 100)
 {% endhighlight %}
 
-## Results
+# Results
 At this point it will be enough to check if there are any circles.
-If there are, it means that we have a signal that the one of the lights in the <span style="color:red">oven</span> are on.<br/>
+If there are, it means that we have a signal that at least one of the <span style="color:red">oven</span> lights is on.<br/>
 If we couldn't find any circles it means that none of the lights are on and the <span style="color:red">oven</span> is off.
 
 To prove that, we can draw the circles on the original image with the following code:
@@ -165,7 +165,7 @@ The result will be:
 There are many things that we can do from here, some examples are:
 
 1. Detect the specific light that is on and by that understanding the exact status of the <span style="color:red">oven</span>.
-2. Create a service that will allow us to check the status of the over remotely.
+2. Create a service that will allow us to check the status of the <span style="color:red">oven</span> remotely.
 3. Add this functionality to raspberry pi so we can have a small device that will alert us if the <span style="color:red">oven</span> is off or on.
 
 Full code sample can be found on [Github](https://github.com/kazuar/opencv_light_detection).
