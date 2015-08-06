@@ -283,6 +283,25 @@ footer {
   text-align: center;
 }
 
+.share-page {
+    text-align: center;
+    background: #529ecc;
+    color: #efefef;
+    padding: 8px 15px;
+    border-radius: 5px;
+    margin: 1.5 * 30px 0;
+
+    a {
+        font-weight: 700;
+        color: #fff;
+        margin-left: 10px;
+
+        &:hover {
+            border-bottom: 1px dashed #fff;
+        }
+    }
+}
+
 // Settled on moving the import of syntax highlighting to the bottom of the CSS
 // ... Otherwise it really bloats up the top of the CSS file and makes it difficult to find the start
 @import "highlights";
