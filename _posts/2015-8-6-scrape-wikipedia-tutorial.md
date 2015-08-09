@@ -65,7 +65,7 @@ In the [page source](view-source:https://en.wikipedia.org/wiki/Country_code#List
 <a href="/wiki/Country_codes:_U%E2%80%93Z" title="Country codes: U–Z">U–Z</a></p>
 {% endhighlight %}
 
-We can see that for each letter we have an **`<a>`** tag with **"href"** that had the following template **`"/wiki/Country_codes:_<LETTER / LETTER RANGE>"`**. We want the **"href"** values of these **`<a>`** tags, they will lead us to countries data.
+We can see that for each letter we have an **`<a>`** tag with **"href"** that has the following template **`"/wiki/Country_codes:_<LETTER / LETTER RANGE>"`**. We want the **"href"** values of these **`<a>`** tags, they will lead us to countries data.
 
 In the next one liner we perform the following actions:
 
