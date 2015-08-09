@@ -241,7 +241,7 @@ class CountryDataCodes(object):
             self._countries_data = json.load(input_file)
 {% endhighlight %}
 
-The next code is for creating dictionaries that will allow us to do the folowing: 
+The next code is for creating dictionaries that will allow us to do the following: 
 
 1. Translate between 2 letter country code to country name (using the 'ISO 3166-1 alpha-2' values from each country)
 2. Translate between 3 letter country code to country name (using the 'ISO 3166-1 alpha-3' values from each country)
