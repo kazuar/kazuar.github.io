@@ -6,7 +6,7 @@ comments: true
 
 Someone recently asked me if there's a way to translate a 2 letter country code (i.e. US) to a country name (i.e. United States), and similarly, if there's a way to translate a 3 letter country code (i.e. CAN) to a country name (i.e. Canada).
 
-Wikipedia has a [page](https://en.wikipedia.org/wiki/Country_code) that lists different data properties for each country. This data include country codes, 
+Wikipedia has a [page](https://en.wikipedia.org/wiki/Country_code) that lists different data properties for each country. This data include country codes, mobile country code, country top level domain, etc. 
 
 In this tutorial we will scrape Wikipedia for the information about each country, and then translate between the different possible country names. We will perform the following steps:
 
