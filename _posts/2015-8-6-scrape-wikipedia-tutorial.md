@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Scrape countries data from Wikipedia
+title: Scrape country data from Wikipedia
 comments: true
 ---
 
@@ -28,7 +28,7 @@ requests
 argparse
 {% endhighlight %}
 
-# Step 1: Get countries urls
+# Step 1: Get urls for all countries
 First, we will extract all the urls for the countries' data.
 
 In order to do that we will fetch the Wikipedia page using the [requests](http://www.python-requests.org/en/latest/) module.
@@ -65,7 +65,7 @@ In the [page source](view-source:https://en.wikipedia.org/wiki/Country_code#List
 <a href="/wiki/Country_codes:_U%E2%80%93Z" title="Country codes: U–Z">U–Z</a></p>
 {% endhighlight %}
 
-We can see that for each letter we have an **`<a>`** tag with **"href"** that has the following template **`"/wiki/Country_codes:_<LETTER / LETTER RANGE>"`**. We want the **"href"** values of these **`<a>`** tags, they will lead us to the countries data.
+We can see that for each letter we have an **`<a>`** tag with **"href"** that has the following template **`"/wiki/Country_codes:_<LETTER / LETTER RANGE>"`**. We want the **"href"** values of these **`<a>`** tags, they will lead us to the country data.
 
 In the next one liner we perform the following actions:
 
@@ -102,7 +102,7 @@ countries_urls = [
 # Step 2: Get the details for each country
 Now that we have all the urls for the country data saved in **"`countries_urls`"**, we will extract the data that we actually want from these urls.
 
-Each url holds a list of countries and some information about them.
+Each url holds a list of countries and information about them.
 You can see examples of how this data looks in the following [page](https://en.wikipedia.org/wiki/Country_codes:_C) or in the following image:
 
 ![country_data]({{ site.baseurl }}/images/scrape_wikipedia_tutorial/country_data.png)
@@ -110,7 +110,7 @@ You can see examples of how this data looks in the following [page](https://en.w
 In the code we'll create a new function called **"`scrape_countries_details`"**.
 This function will help us collect the data for all of the countries from each url.
 We will use the function as we iterate on the urls that we fetched in **step 1**.
-The **"`scrape_countries_details`"** function will return a list of countries data from the url.
+The **"`scrape_countries_details`"** function will return a list of country data from the url.
 We will save these results in the **"`all_countries_details`"** list.
 
 {% highlight python %}
@@ -223,7 +223,7 @@ Code for this part can be found [here](https://github.com/kazuar/country_data_co
 
 # Step 3: Create country code translator
 
-Once we have a file with all the countries data, we can create our country code translator.
+Once we have a file with all the country data, we can create our country code translator.
 We want to create an object that will resolve every type of country code to the country name.
 For example, we want to be to do the following translations:
 
