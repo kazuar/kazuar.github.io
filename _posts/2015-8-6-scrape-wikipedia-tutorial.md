@@ -225,7 +225,7 @@ Code for this part can be found [here](https://github.com/kazuar/country_data_co
 
 Once we have a file with all the countries data, we can create our country code translator.
 We want to create an object that will resolve every type of country code to the country name.
-For example, we want to be to do the following translates:
+For example, we want to be to do the following translations:
 
 1. "US" => "United States"
 2. "USA" = > "United States"
