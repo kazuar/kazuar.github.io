@@ -4,12 +4,8 @@ title: About
 permalink: /about/
 ---
 
-TBD
-
-### More Information
-
-TBD
+I'm a software engineer working with python on different projects.
 
 ### Contact me
 
-[tzahi.vidas@gmail.com](mailto:tzahi.vidas@gmail.com)
+tzahi dot vidas at gmail dot com
