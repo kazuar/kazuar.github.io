@@ -10,7 +10,7 @@ What's cooler than controlling your TV with voice commands?<br/>
 **A billion dollars!**
 
 But for this post,<br/>
-It's controlling your TV with voice commands through **Raspberry Pi!**<br/>
+it's controlling your TV with voice commands through **Raspberry Pi!**<br/>
 (and a billion dollars...)
 
 So, down to business.
@@ -111,7 +111,7 @@ This is a very simple script, which performs the following steps:
 
 1. Initialize the required components
 2. Start running an infinite loop until there's a stop command:
-	1. Record audio through Microphone
+	1. Record audio through the microphone
 	2. Translate the audio to text
 	3. Check if text contains a command
 	4. Perform the required command
@@ -124,7 +124,7 @@ import cec
 import speech_recognition as sr
 {% endhighlight %}
 
-We need to define the commands that we want to use. We will want to start with the following commands:
+We need to define the commands that we want to use. For this example I chose the following commands:
 
 1. Turn the TV on
 2. Turn the TV off
@@ -230,7 +230,7 @@ if __name__ == '__main__':
     main()
 {% endhighlight %}
 
-If you run the script, you can say the commands and see if the script output will be able to translate you speech correctly and run the correct command.
+If you run the script, you can say the commands and check in the script output if it was able to translate your speech correctly and run the correct command.
 
 That's it!
 
