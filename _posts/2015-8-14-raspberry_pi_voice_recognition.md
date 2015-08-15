@@ -15,7 +15,7 @@ it's controlling your TV with voice commands through **Raspberry Pi!**<br/>
 
 So, down to business.
 
-Full code can be found on [Github](https://github.com/kazuar/raspberrypi_voice_control).
+Full code can be found on [GitHub](https://github.com/kazuar/raspberrypi_voice_control).
 
 # Hardware requirements:
 1. TV set with enabled [HDMI-CEC](https://en.wikipedia.org/wiki/HDMI#CEC) / Anynet+ (Samsung) - You'll have to check your own TV set and make sure that you enable the HDMI-CEC control.
@@ -234,7 +234,7 @@ If you run the script, you can say the commands and check in the script output i
 
 That's it!
 
-Full code can be found on [Github](https://github.com/kazuar/raspberrypi_voice_control).
+Full code can be found on [GitHub](https://github.com/kazuar/raspberrypi_voice_control).
 
 So, what's cooler than controlling your TV with voice commands?<br/>
 A billion dollars!
