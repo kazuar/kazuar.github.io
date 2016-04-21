@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Writing a Slack game with Python - part 1
+title: Creating a slack bot with Python - part 1
 comments: true
 ---
 
