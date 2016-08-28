@@ -93,7 +93,7 @@ The slack bot will read the message using the **rtm_read** method which returns 
 The script will iterate through them and send the annoying message accordingly.
 Between these, the bot will sleep for half a second every cycle of the loop.
 
-```python
+{% highlight python %}
 import time
 
 while True:
@@ -105,11 +105,11 @@ while True:
         sc.rtm_send_message("general", "<@{}> wrote something...".format(user))
     # Sleep for half a second
     time.sleep(0.5)
-```
+{% endhighlight %}
 
 The full script would look like this:
 
-```python
+{% highlight python %}
 
 import time
 from slackclient import SlackClient
@@ -139,7 +139,7 @@ def main():
 
 if __name__ == '__main__':
     main()
-```
+{% endhighlight %}
 
 The code from this tutorial can be found on my [Github](https://github.com/kazuar/slack_bot_tutorial).
 
