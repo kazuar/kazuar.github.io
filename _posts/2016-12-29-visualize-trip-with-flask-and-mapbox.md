@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Visualize iceland trip with Flask and Mapbox
+title: Visualize your trip with Flask and Mapbox
 comments: true
 ---
 
@@ -9,7 +9,7 @@ comments: true
     <img src="../images/flask_mapbox/mapbox_js.png" height="698"/>
 </div>
 
-Following my recent trip to Iceland (which I highly recommend), I wanted to create a way to visualize the trip with the map, route and stop locations along the way.
+Following my recent trip to Iceland (which I highly recommend), I wanted to visualize the trip using a map, complete with the route and stop locations along the way.
 
 ## Source code
 
@@ -17,19 +17,18 @@ Full source code for this project can be found on [Github](https://github.com/ka
 
 ## Requirements
 
-1. [Flask web framework](http://flask.pocoo.org/) - Python web framework that will be used as the backend server
-2. [Requests](http://docs.python-requests.org/en/master/) - Python package that will allow us to run API queries to Mapbox
-3. [Geojson](https://pypi.python.org/pypi/geojson/) - Python package to create Geojson objects that are supported by Mapbox
+1. [Flask web framework](http://flask.pocoo.org/) - Python web framework for the backend server
+2. [Requests](http://docs.python-requests.org/en/master/) - Python package for performing Mapbox API queries
+3. [GeoJSON](https://pypi.python.org/pypi/geojson/) - Python package for creating GeoJSON objects
 
-## Process
+## Create the environment
 
 ### Signup with a new / existing user in [Mapbox](https://www.mapbox.com/)
 
-In order to use the Mapbox API you will need an access key and for that you need to have a user account.
-There's a starter kit which is free to use ([https://www.mapbox.com/pricing/](https://www.mapbox.com/pricing/))
+In order to use the Mapbox API you will need an access key, and for that you need to have a user account. For smaller projects, I recommend using the starter plan which is free to use ([https://www.mapbox.com/pricing/](https://www.mapbox.com/pricing/))
 
-Once sign up is ready, you can find your api key in the following url under the "Access Token" section:
-[https://www.mapbox.com/studio/](https://www.mapbox.com/studio/)
+Once your account is set up, you can find your API key by following this URL [https://www.mapbox.com/studio/](https://www.mapbox.com/studio/). It will be under the "Access Token" section.
+
 
 ### Prepare python environment
 
@@ -58,10 +57,10 @@ Create the folders for the project:
 {% endhighlight %}
 
 We'll put our main files in the **`flask_mapbox`** folder.
-`static` folder will be used for CSS, Javascript and images
-`templates` folder will be used for HTML files
+The **`static`** folder will be used for CSS, Javascript and images, while the
+**`templates`** folder will be used for HTML files
 
-Create server.py which will hold the python code for our project:
+Create a **`server.py`** file for the python code:
 
 {% highlight python %}
 
@@ -73,7 +72,7 @@ app.config.from_object(__name__)
 
 {% endhighlight %}
 
-Create the start server script that will set the appropriate environment variables:
+Create a bash script to that will set the environment variables needed to start the server:
 
 {% highlight bash %}
 
@@ -85,7 +84,9 @@ flask run
 
 {% endhighlight %}
 
-That's it, the server's ready for run, open command line console and run the start.sh file:
+That's it, the server is ready to run! 
+
+Open the command line console and run the **`start.sh`** file:
 
 {% highlight bash %}
 
@@ -93,14 +94,14 @@ sh start.sh
 
 {% endhighlight %}
 
-You can browse to [http://127.0.0.1:5000/](http://127.0.0.1:5000/) but for now you'll only get a `404 page not found` error.
+Browse to [http://127.0.0.1:5000/](http://127.0.0.1:5000/). For now, you'll only get a **`404 page not found`** error as we are not doing anything yet.
 
-### Display a simple map
+## Display a simple map
 
-In this part you will be able to display a map using Mapbox API.
+In this part you will learn how to display a map using the Mapbox API.
 
-As we don't want to put the API key as part of the code, start by putting your API key in the `settings.py` configuration file.
-Create a new file with the name `settings.py` in the root folder of the project and add the following code:
+As we don't want to put the API key as part of the code, start by putting it in a configuration file.
+Create a new file with the name **`settings.py`** in the root folder of the project and add the following code:
 
 {% highlight python %}
 # settings.py
@@ -109,7 +110,7 @@ MAPBOX_ACCESS_KEY = '<MAPBOX_ACCESS_KEY>'
 
 {% endhighlight %}
 
-Add an environment variable in `start.sh` that will point to `settings.py`.
+Add an additional environment variable in **`start.sh`** that will point to **`settings.py`**.
 
 {% highlight bash %}
 
@@ -117,7 +118,7 @@ export APP_CONFIG_FILE=settings.py
 
 {% endhighlight %}
 
-`start.sh` should look like:
+**`start.sh`** should look like:
 
 {% highlight bash %}
 
@@ -130,7 +131,7 @@ flask run
 
 {% endhighlight %}
 
-In `server.py` read the configuration file from the environment variable and get the access key from the configuration file:
+In **`server.py`** read the **`settings.py`** configuration file from the environment variable and get the access key from the configuration file:
 
 {% highlight python %}
 # server.py
@@ -141,7 +142,7 @@ MAPBOX_ACCESS_KEY = app.config['MAPBOX_ACCESS_KEY']
 
 {% endhighlight %}
 
-Next, create a function in the `server.py` file that will route to the new template `templates/mapbox_js.html`.
+Next, create a function in the **`server.py`** file that will route to the new template **`templates/mapbox_js.html`**.
 The function should also send the Mapbox access key to the template.
 
 {% highlight python %}
@@ -156,10 +157,17 @@ def mapbox_js():
 
 {% endhighlight %}
 
-Finally, in the `templates` folder, create a new HTML file with the name `mapbox_js.html` for showing the map.
-The HTML header will load the css and javascript from Mapbox.
-In the javascript section of the HTML we set the Mapbox access key that we got from the server and create a new map object in the `<div id="map"></div>` element.
-The map will be set to show Iceland ([65.0,-18.73]) with zoom level of "7".  
+Finally, we want to create the HTML file that will show the map.
+
+In the **`templates`** folder, create a new HTML file with the name **`mapbox_js.html`** for showing the map.
+
+- In the HTML header we will load the css and javascript from Mapbox.
+
+- In the JavaScript section of the HTML we will set the Mapbox access key that we got from the server, and create a new map object in the **`<div id="map">`** element.
+
+- We will set the map to show Iceland (`[65.0,-18.73]`) with zoom level of `7`.
+
+The **`mapbox_js.html`** file should look like this:
 
 {% highlight html %}
 {% raw %}
@@ -192,7 +200,7 @@ The map will be set to show Iceland ([65.0,-18.73]) with zoom level of "7".
 {% endraw %}
 {% endhighlight %}
 
-You can start the server again by running the `start.sh` file:
+You can start the server again by running the **`start.sh`** file:
 
 {% highlight bash %}
 
@@ -200,7 +208,7 @@ sh start.sh
 
 {% endhighlight %}
 
-Browsing to [http://127.0.0.1:4000/visualize-trip-with-flask-and-mapbox/](http://127.0.0.1:4000/visualize-trip-with-flask-and-mapbox/) will show a page with a Mapbox map:
+Browsing to [http://127.0.0.1:5000/mapbox_js](http://127.0.0.1:5000/mapbox_js) will show a map of Iceland:
 
 ![]({{ site.baseurl }}/images/flask_mapbox/map1.png)
 
@@ -208,9 +216,11 @@ Browsing to [http://127.0.0.1:4000/visualize-trip-with-flask-and-mapbox/](http:/
 
 In order to show a route on the map we will use the [Mapbox routing API](https://www.mapbox.com/directions/).
 
-We will first start by setting up the geo coordinate points along our route.
-Our geo coordinates will be on the ring road around Iceland.
-Add the geo coordinates to `server.py`:
+Start by gathering the geo-coordinate points along our route around Iceland's ring road.
+
+We will use these geo-coordinates when performing our Mapbox API request.
+
+Add the following code to **`server.py`**:
 
 {% highlight python %}
 # server.py
@@ -239,31 +249,32 @@ ROUTE = [
 
 {% endhighlight %}
 
-In order to get the route we'll create a url with the geo coordinates and access key.
-The url would look like this:
+In order to get the driving direction from Mapbox we'll create an API request using the geo-coordinates and Mapbox access key.
+
+This is the template for the API call:
 
 [https://api.mapbox.com/directions/v5/mapbox/driving/{GEO_COORDINATES_LIST}.json?access_token={MAPBOX_ACCESS_TOKEN}&overview=full&geometries=geojson](https://api.mapbox.com/directions/v5/mapbox/driving/{GEO_COORDINATES_LIST}.json?access_token={MAPBOX_ACCESS_TOKEN}&overview=full&geometries=geojson)
 
-Add the following code to `server.py`:
+Add the following code to **`server.py`**:
 
 {% highlight python %}
 # server.py
 
+# Mapbox driving direction API call
 ROUTE_URL = "https://api.mapbox.com/directions/v5/mapbox/driving/{0}.json?access_token={1}&overview=full&geometries=geojson"
 
 def create_route_url():
-    # Creat a string containing all the geo coordinates
+    # Create a string with all the geo coordinates
     lat_longs = ";".join(["{0},{1}".format(point["long"], point["lat"]) for point in ROUTE])
-    # Create the url with the geo coordinates and access token
+    # Create a url with the geo coordinates and access token
     url = ROUTE_URL.format(lat_longs, MAPBOX_ACCESS_KEY)
     return url
 
 {% endhighlight %}
 
-The function `create_route_url` will create a string containing all the geo coordinates on the route and the Mapbox access token.
+The function **`create_route_url`** will create the API URL with all of our geo-coordinates and the Mapbox access token.
 
-The following code will use `requests` to run a GET request to Mapbox routing API.
-Next, the code will convert the result to a geo json feature object that we will return from the `get_route_data` function.
+The **`get_route_data`** function will use **`requests`** to run the API request and return the results as a GeoJSON object:
 
 {% highlight python %}
 # server.py
@@ -284,7 +295,7 @@ def get_route_data():
 
 {% endhighlight %}
 
-We'll modify the previous function `mapbox_js` and also send the routing data to the HTML:
+We'll modify the previous **`mapbox_js`** function and add the routing data to the **`render_template`** function:
 
 {% highlight python %}
 # server.py
@@ -300,7 +311,9 @@ def mapbox_js():
 
 {% endhighlight %}
 
-In the `mapbox_js.html` file we will add a feature layer with the routing data in the Javascript section:
+In the **`mapbox_js.html`** file add a Mapbox feature layer with the routing data.
+
+Add the following code to the JavaScript section in **`mapbox_js.html`**:
 
 {% highlight javascript %}
 {% raw %}
@@ -326,16 +339,17 @@ sh start.sh
 
 {% endhighlight %}
 
-Browsing to [http://127.0.0.1:4000/visualize-trip-with-flask-and-mapbox/](http://127.0.0.1:4000/visualize-trip-with-flask-and-mapbox/) will show a page with a Mapbox map and the routing (the black line) starting in Keflavík International Airport (KEF), going around Iceland and ending in Reykjavík:
+Browsing to [http://127.0.0.1:5000/mapbox_js](http://127.0.0.1:5000/mapbox_js) will show a page with a Mapbox map and the routing (the black line) starting in Keflavík International Airport (KEF), going around Iceland and ending in Reykjavík:
 
 ![]({{ site.baseurl }}/images/flask_mapbox/map2.png)
 
-### Add markers on the map
+### Add location markers on the map
 
-Next, we'll add map markers in the cities / places that I've spent the night along the way.
+Next, we'll add location markers for cities and locations along the route.
 
-We'll edit the `ROUTE` to add location names and `is_stop_location` boolean for locations that were used for an overnight stop.
-In `server.py` edit the data in `ROUTE`:
+We'll edit the **`ROUTE`** dictionary with the location names (**`name`**) and a boolean to signal if this is a stop location (**`is_stop_location`**) for locations that we stopped in along the way.
+
+In **`server.py`** edit the data in **`ROUTE`**:
 
 {% highlight python %}
 # server.py
@@ -364,7 +378,10 @@ ROUTE = [
 
 {% endhighlight %}
 
-We'll also create a function that will create geojson for markers and send it back to the template.
+In the **`server.py`** file, we'll declare a function to create GeoJSON objects for markers.
+These marker objects will have the latitude, longitude and different properties such as title, icon, marker color and the number of marker along the way.
+
+The new function will look like this:
 
 {% highlight python %}
 # server.py
@@ -401,7 +418,7 @@ def mapbox_js():
 
 {% endhighlight %}
 
-In the template, we'll set a new feature layer with the data of the stop locations:
+In the template, we'll set a new feature layer with the stop locations data:
 
 {% highlight javascript %}
 {% raw %}
@@ -421,18 +438,19 @@ L.mapbox.featureLayer({{stop_locations|safe}}).addTo(map);
 {% endraw %}
 {% endhighlight %}
 
-Going to [http://127.0.0.1:4000/visualize-trip-with-flask-and-mapbox/](http://127.0.0.1:4000/visualize-trip-with-flask-and-mapbox/) again will show the map of Iceland with the route and markers for the stop locations.
+Go to [http://127.0.0.1:5000/mapbox_js](http://127.0.0.1:5000/mapbox_js) again will show the map of Iceland with the route and markers for the stop locations.
 
 ![]({{ site.baseurl }}/images/flask_mapbox/map3.png)
 
 ### Mapbox.js to Mapbox GL
 
-Some time ago, Mapbox released a new framework, [Mapbox GL](https://www.mapbox.com/blog/mapbox-gl/). While still considered a new framework, it might be the future replacement for Mapbox.js which is a [Leaflet](http://leafletjs.com/) plugin.
+Some time ago, Mapbox released a new framework, [Mapbox GL](https://www.mapbox.com/blog/mapbox-gl/).
 
-In this part we will switch to Mapbox GL and show some of the differences between the two frameworks.
+While Mapbox GL is still considered a new framework, it might be the future replacement for Mapbox.js ([Leaflet](http://leafletjs.com/) plugin).
 
-Let's start by creating a new function in `server.py` that will route to a new template for using Mapbox GL.
-The new function will just call a new template and pass the Mapbox access key:
+In this part, we will convert our code to user Mapbox GL and show some of the differences between the two frameworks.
+
+We'll start by creating a new function in **`server.py`** that will route to a new template that uses Mapbox GL:
 
 {% highlight python %}
 # server.py
@@ -446,11 +464,12 @@ def mapbox_gl():
 
 {% endhighlight %}
 
-Create a new template `templates/mapbox_gl.html` and add the following code:
+Create a new template **`templates/mapbox_gl.html`** and add the following code:
 
 {% highlight html %}
 {% raw %}
-# templates/mapbox_gl.html
+
+<!-- templates/mapbox_gl.html -->
 
 <html>
     <head>
@@ -483,15 +502,17 @@ Create a new template `templates/mapbox_gl.html` and add the following code:
 {% endraw %}
 {% endhighlight %}
 
-This time we use the `mapbox-gl` javascript and css.
-In the Javascript section we create a new object of `mapboxgl.Map`.
-the `mapboxgl` object is set with the `id` of the div that we want to put it in, the mapbox style, latitude and longitude of the center of Iceland and zoom level of 6.
+This time we use the **`mapbox-gl`** JavaScript and CSS.
+
+In the JavaScript section we'll create a new **`mapboxgl.Map`** object.
+
+the **`mapboxgl`** object is set with the **`id`** of the relevant div, the style of the map, latitude and longitude of the center of Iceland and the zoom level for the map.
 
 Going to [http://127.0.0.1:5000/mapbox_gl](http://127.0.0.1:5000/mapbox_gl) will show the map of iceland.
 
 ![]({{ site.baseurl }}/images/flask_mapbox/map4.png)
 
-Add the route data using the same `get_route_data` function that we used previously `server.py`:
+Add the route data using the same **`get_route_data`** function that we used previously:
 
 {% highlight python %}
 # server.py
@@ -507,8 +528,9 @@ def mapbox_gl():
 
 {% endhighlight %}
 
-In the `mapbox_gl.html` template, add the following to the javascript section after the initialization of the `map` object.
-This time, in the javascript part we first create a source with the routing data for the map and then we add a layer with the source that we created.
+In the **`mapbox_gl.html`** template, add the following to the JavaScript section after the initialization of the **`map`** object.
+
+This time, in the JavaScript part of the HTML we first create a source with the routing data for the map and then we add a layer using the source object that we just created.
 
 {% highlight javascript %}
 {% raw %}
@@ -540,13 +562,14 @@ map.on('load', function () {
 {% endraw %}
 {% endhighlight %}
 
-Going to [http://127.0.0.1:5000/mapbox_gl](http://127.0.0.1:5000/mapbox_gl) will show the map of iceland with the route along the ring road:
+Going to [http://127.0.0.1:5000/mapbox_gl](http://127.0.0.1:5000/mapbox_gl) will show the map of Iceland with the route drawn along the ring road:
 
 
 ![]({{ site.baseurl }}/images/flask_mapbox/map5.png)
 
-Adding the markers is a bit different with Mapbox GL.
-From the server side, we send the markers in the same way:
+Adding the markers is a bit different with Mapbox GL, as it is more of a manual process.
+
+From the server side, we send the markers in the same way as we did before:
 
 {% highlight python %}
 # server.py
@@ -565,7 +588,7 @@ def mapbox_gl():
 
 {% endhighlight %}
 
-On the HTML side, in `templates/mapbox_gl.html` add the following css:
+On the HTML side, in **`templates/mapbox_gl.html`** add the following css:
 
 {% highlight css %}
 /* mapbox_gl.html */
@@ -582,10 +605,10 @@ On the HTML side, in `templates/mapbox_gl.html` add the following css:
 
 {% endhighlight %}
 
-The configuration uses a file called `marker.png` which can be found in the [Github repository](https://github.com/kazuar/flask_mapbox/blob/master/static/marker.png).
-Put `marker.png` in the `templates` folder.
+The configuration uses a file called **`marker.png`** which can be found in my [Github repository](https://github.com/kazuar/flask_mapbox/blob/master/static/marker.png).
+Put **`marker.png`** in the **`templates`** folder.
 
-In the javascript section of `templates/mapbox_gl.html` load the stop locations structure that we got from the server and for each stop location add a marker.
+In the JavaScript part of **`templates/mapbox_gl.html`**, load the stop locations data structure and add a marker for each stop location.
 
 {% highlight js %}
 {% raw %}
@@ -610,19 +633,19 @@ map.on('load', function () {
 {% endraw %}
 {% endhighlight %}
 
-Going to http://127.0.0.1:5000/mapbox_gl will show the map of iceland with the route along the ring road with markers in the stop locations:
+Going to [http://127.0.0.1:5000/mapbox_gl](http://127.0.0.1:5000/mapbox_gl) will show the map of Iceland with the route along the ring road, and with markers in the stop locations:
 
 
 ![]({{ site.baseurl }}/images/flask_mapbox/map6.png)
 
-### Adding map animation
+### Adding map animations
 
-One more thing that I wanted to do is show how to add an animation on top of the map.
+We can also add an animation on top of our map.
 For this example, we will add an animation of a car going through the route between the stop locations.
 
-We start by adding a new source and layer for the car icon that we will animate across the route over the map.
+We start by adding a new source and layer for the car icon that we will animate across the route.
 
-On the client side, add the following code to the javascript section in `mapbox_gl.html` inside the map load function:
+On the client side, add the following code to the JavaScript section in **`mapbox_gl.html`** inside the map load function:
 
 {% highlight js %}
 {% raw %}
@@ -675,7 +698,7 @@ map.on('load', function () {
 {% endraw %}
 {% endhighlight %}
 
-Add animation function for moving the car along the route:
+Add the animation function for moving the car along the route:
 
 {% highlight js %}
 {% raw %}
@@ -711,7 +734,7 @@ map.on('load', function () {
 {% endraw %}
 {% endhighlight %}
 
-On the server side, we need to add a couple of more details to the stop locations so we can move the car between the stop locations.
+On the server side, we need to add a couple of additional details to the stop locations so we can move the car between them.
 
 Add the following code to the server side:
 
@@ -796,4 +819,4 @@ Going to [http://127.0.0.1:5000/mapbox_gl](http://127.0.0.1:5000/mapbox_gl) will
 
 ![]({{ site.baseurl }}/images/flask_mapbox/mapbox_gl.png)
 
-Full code can be found on [Github](https://github.com/kazuar/flask_mapbox)
+Full code can be found on [Github](https://github.com/kazuar/flask_mapbox).
