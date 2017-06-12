@@ -107,14 +107,13 @@ result = session_requests.get(
 {% endhighlight %}
 
 In order to test this, let's scrape the list of projects from the bitbucket dashboard page.
-Again, we will use xpath to find the target elements, clean up the text from new-lines and spaces and print out the results. If everything went OK, the output should be the list of buckets / project that are in your bitbucket account.
+Again, we will use xpath to find the target elements and print out the results. If everything went OK, the output should be the list of buckets / project that are in your bitbucket account.
 
 {% highlight python %}
 tree = html.fromstring(result.content)
-bucket_elems = tree.findall(".//span[@class='repo-name']/")
-bucket_names = [bucket.text_content.replace("\n", "").strip() for bucket in bucket_elems]
+bucket_names = tree.xpath("//div[@class='repo-list--repo']/a/text()")
 
-print bucket_names
+print(bucket_names)
 {% endhighlight %}
 
 You can also validate the requests results by checking the returned status code from each request.
