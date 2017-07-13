@@ -4,10 +4,7 @@ title: Visualize your trip with Flask and Mapbox
 comments: true
 ---
 
-<div>
-    <img src="../images/flask_mapbox/mapbox_js.png" style="position:absolute; width:100%; left:0px"/>
-    <img src="../images/flask_mapbox/mapbox_js.png" height="698"/>
-</div>
+![mapbox_js]({{ site.baseurl }}/images/flask_mapbox/mapbox_js.png)
 
 Following my recent trip to Iceland (which I highly recommend), I wanted to visualize the trip using a map, complete with the route and stop locations along the way.
 
