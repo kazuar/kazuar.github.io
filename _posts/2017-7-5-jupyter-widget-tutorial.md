@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Tutorial for creating a Jupyter notebook widget
+title: Creating a Jupyter notebook widget
 tags:
 - python
 - jupyter
