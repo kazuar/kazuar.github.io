@@ -415,7 +415,7 @@ module.exports['version'] = require('../package.json').version;
 
 Now we're ready to run the full example.
 
-First, uninstall the plugin from our jupyter notebook so we can clean the environment before re-building and re-installing it:
+First, uninstall the widget from our jupyter notebook so we can clean the environment before re-building and re-installing it:
 
 {% highlight bash %}
 jupyter nbextension uninstall --py --sys-prefix jupyter_britecharts_widget_tutorial
