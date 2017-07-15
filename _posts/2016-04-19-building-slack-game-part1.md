@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Creating a slack bot with Python - part 1
+title: Creating a slack bot with Python
 comments: true
 ---
 
