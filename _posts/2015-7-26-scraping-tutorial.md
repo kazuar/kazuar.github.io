@@ -24,7 +24,9 @@ lxml
 {% endhighlight %}
 
 # Step 1: Study the website
+
 ## Open the login page
+
 Go to the following page "[bitbucket.org/account/signin](https://bitbucket.org/account/signin/?next=/)" .
 You will see the following page (perform logout in case you're already logged in) 
 ![scrape_login_page]({{ site.baseurl }}/images/scrape_login_page.png)
