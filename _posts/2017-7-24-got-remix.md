@@ -12,20 +12,26 @@ As a fan of `Game of Thrones`, I couldn't wait for it to return for this 7th sea
 
 I enjoyed it so much that I wanted to see more of it... **much more of it.**
 
-Now, it would have taken me about 5 minutes to manually split the video and then combine all the parts using some video editing program.
+In this post we'll take the short video compilation of sam cleaning the Citadel,
+we will split it to multiple sub clips and create a random video of sam cleaning the Citadel using a random mix of those sub clips.
+
+Now, it would have taken me about 5 minutes to do all this manually by splitting the video and then combining all the parts using some video editing program.
 
 But why would I waste 5 minutes when I can spend a whole weekend doing the same thing with Python?
 I mean... am I'm right or am I right? **Right?**
 
-Anyway, in this post I'll show how you can use Python to split a video using a certain signal and create a longer version of it.
+Anyway... 
+
+We will use Python to analyze the audio of the video, find the "silent" parts in the video and split those into frames.
+Then, we will combine those frames in a random order and save it as a new video file.
 
 > **Disclaimer:**  As this is one of the first times I've actually done this kind of signal processing and analysis, I'm pretty sure there are better and more optimized ways to do these kind of things. If you have a different suggestion, please share them in the comments.
 
 Source code can be found on [github](https://github.com/kazuar/got_remix).
 
-## Create a dev environment for our video editing and analysis
+## Create a dev environment for our project
 
-For the audio and video analysis I used two main packages:
+For this project, I used two main packages:
 
 1. [Librosa](https://github.com/librosa/librosa) - Python library for audio and music
 2. [MoviePy](https://github.com/Zulko/moviepy) - Python library for video
@@ -33,20 +39,23 @@ For the audio and video analysis I used two main packages:
 Start by creating a virtual / conda environment with the following packages:
 
 {% highlight python %}
+numpy
+matplotlib
 librosa
 moviepy
+jupyter
+progressbar
 {% endhighlight %}
 
-We will use the librosa package to analyze our audio.
-Basically what we're about to do is find the "silent" parts in the audio and split the video around them.
-After we split the video to the different frames we can combine them again in a different order and 
+We will use the `librosa` package to analyze our audio and find our frames in the audio.
+After that we will use those frames to split the video and compine them randomly using the `moviepy` package.
 
 ## Processing the audio frames in the video
 
 First we'll load the audio from our video file:
 
 {% highlight python %}
-video_file_path = "movie.mp4"
+video_file_path = "resources/short_got.mp4"
 audio_data, sr = librosa.load(video_file_path)
 {% endhighlight %}
 
@@ -62,7 +71,7 @@ import librosa
 import librosa.display
 import matplotlib.pyplot as plt
 
-video_file_path = "movie.mp4"
+video_file_path = "resources/short_got.mp4"
 audio_data, sr = librosa.load(video_file_path)
 librosa.display.waveplot(audio_data)
 plt.show()
@@ -73,9 +82,9 @@ If we run the above code on our video file we will see the following wave plot:
 ![waveplot]({{ site.baseurl }}/images/got_remix/wave_plot.png)
 
 Seems like this audio is a bit noisy.
-We need to try and understand how to detect the silent parts in the audio.
+We need to look at the "silent" parts of the audio and find a way to identify them.
 
-Lets zoom into one of the parts in the audio and try to identify "boundaries" of silence:
+Lets zoom into one of the parts in the audio and try to identify the "boundaries of silence":
 
 ![waveplot]({{ site.baseurl }}/images/got_remix/wave_plot_pre_zoom.png)
 
@@ -83,9 +92,9 @@ We get a better and clearer image of what the audio looks like in the "silent" p
 
 ![waveplot]({{ site.baseurl }}/images/got_remix/wave_plot_zoom.png)
 
-It seems like we can declare that a place is silent if the wave is between ```-0.02``` to ```0.02```.
+It seems like we can declare that a location in the audio is silent if the wave is between `-0.02` to `0.02`.
 
-Let take a look of a plot with these limits:
+Let take a look at the plot with those limits:
 
 {% highlight python %}
 import librosa
@@ -93,7 +102,7 @@ import librosa.display
 import matplotlib.pyplot as plt
 
 # Load audio from file
-video_file_path = "movie.mp4"
+video_file_path = "resources/short_got.mp4"
 audio_data, sr = librosa.load(video_file_path)
 
 # Display wave plot
@@ -109,8 +118,8 @@ plt.show()
 
 ![waveplot]({{ site.baseurl }}/images/got_remix/wave_plot_limits.png)
 
-Once we set our limits, we can start to analyze the audio and try to find "silent" frames.
-We do that by setting a frame size and then iterating over the audio data, frame by frame and checking if each frame has a value that is beyond our limits.
+Once we set our limits, we can analyze the audio and try to find "silent" frames.
+We do that by setting a frame size and then iterating over the audio data, frame by frame, and checking if each frame has a value that is beyond our limits.
 
 {% highlight python %}
 import math
@@ -131,22 +140,34 @@ num_of_frames = math.floor(len(audio_data) / frame_len)
 
 silent_frames_indexes = []
 for frame_num in range(int(num_of_frames)):
+    # Get the start and end of the frame
     start = int(frame_num * frame_len)
     stop = int((frame_num + 1) * frame_len)
-    frame = audio_data[start:stop]
-    cur_max_val = max(map(abs, frame))
-    if min_limit < cur_max_val < max_limit:
+
+    # Get the absolute values in each frame
+    abs_frame = map(abs, audio_data[start:stop])
+
+    # Get the maximum value in the frame
+    cur_max_val = max(abs_frame)
+
+    # We've reached a "silent" frame if the maximum 
+    # value in the frame below our limit
+    if cur_max_val < max_limit:
         silent_frames_indexes.append(frame_num)
 {% endhighlight %}
 
-What we've done here is split the audio into frames. For our case, each frame is the size of `0.01` so each frame's length is `0.01 * sample rate (22050)`.
-For each frame, we convert each value to an absolute value and take the maximum value in that frame and check if it's below our limit (0.02).
+What we've done here is find the indexes of silent frames in the audio. 
+
+In our case, each frame is the size of `0.01` so each frame's length is `0.01 * sample rate (22050)`.
+
+For each frame, if the absolute maximum value of the frame is below our limit (`0.02`) we mark it as a "silent" frame and collect it in our `silent frames` list.
 
 Once we collected all indexes of the "silent" frames, we can plot them on our audio wave:
 
 ![waveplot]({{ site.baseurl }}/images/got_remix/wave_plot_silent_frames.png)
 
-It seems like there's a lot of sections where we signaled as "silent".
+It seems like there's a lot of sections that we signaled as "silent".
+
 We can aggregate them and take another look at a cleaner plot.
 
 {% highlight python %}
@@ -174,11 +195,11 @@ if frames[-1][1] < len(audio_data):
    frames.append((frames[-1][1] + 1, len(audio_data))) 
 {% endhighlight %}
 
-That's it, we have everything we need in order to create our mix of Sam
+That's it, we have everything we need in order to create our new video of Sam in the Citadel.
 
 ![waveplot]({{ site.baseurl }}/images/got_remix/sam_in_the_citadel.gif)
 
-## Creating a video mix
+## Creating the video mix
 
 Once we have our audio frames, we can use them for creating our new video.
 
