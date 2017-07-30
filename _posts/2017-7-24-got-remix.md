@@ -8,24 +8,26 @@ comments: true
 
 <iframe width="420" height="315" src="http://www.youtube.com/embed/hI4Ed9ejEuU" frameborder="0" allowfullscreen></iframe>
 
-As a fan of `Game of Thrones`, I couldn't wait for it to return for this 7th season and I really enjoyed that great scene of Sam cleaning the Citadel.
+As a fan of `Game of Thrones`, I couldn't wait for it to return for a 7th season. Watching the season premier, I greatly enjoyed that great scene of Sam doing his chores at the Citadel.
 
-I enjoyed it so much that I wanted to see more of it... **much more of it.**
+I enjoyed it so much that I wanted to see more of it... _much more of it_.
 
 In this post we'll take the short video compilation of sam cleaning the Citadel,
-we will split it to multiple sub clips and create a random video of sam cleaning the Citadel using a random mix of those sub clips.
+we will split it to multiple sub clips and create a video of sam cleaning the Citadel using a random mix of those sub clips.
 
-Now, it would have taken me about 5 minutes to do all this manually by splitting the video and then combining all the parts using some video editing program.
+Now, it would have taken me about five minutes to do all of this manually by splitting the video and then combining all the parts using some video editing program. But why would I waste five minutes when I can spend a whole weekend doing the same thing with Python?
 
-But why would I waste 5 minutes when I can spend a whole weekend doing the same thing with Python?
-I mean... am I'm right or am I right? **Right?**
+I mean... am I right or am I right? _Right?_
 
 Anyway... 
 
-We will use Python to analyze the audio of the video, find the "silent" parts in the video and split those into frames.
-Then, we will combine those frames in a random order and save it as a new video file.
+We will use Python to analyze the audio from the video, find the "silent" parts in the audio, and use those to split the video into sub clips.
+Then, we will combine those sub clips in a random order and save it as a new video file.
 
-> **Disclaimer:**  As this is one of the first times I've actually done this kind of signal processing and analysis, I'm pretty sure there are better and more optimized ways to do these kind of things. If you have a different suggestion, please share them in the comments.
+---
+**Disclaimer:**  As this is one of the first times I've actually done this kind of signal processing and analysis, I'm pretty sure there are better and more optimized ways to do this kind of thing. If you have different suggestions, please share them in the comments.
+
+---
 
 Source code can be found on [github](https://github.com/kazuar/got_remix).
 
@@ -33,8 +35,8 @@ Source code can be found on [github](https://github.com/kazuar/got_remix).
 
 For this project, I used two main packages:
 
-1. [Librosa](https://github.com/librosa/librosa) - Python library for audio and music
-2. [MoviePy](https://github.com/Zulko/moviepy) - Python library for video
+1. [Librosa](https://github.com/librosa/librosa) - Python library for audio and music analysis
+2. [MoviePy](https://github.com/Zulko/moviepy) - Python library for video editing
 
 Start by creating a virtual / conda environment with the following packages:
 
@@ -47,10 +49,10 @@ jupyter
 progressbar
 {% endhighlight %}
 
-We will use the `librosa` package to analyze our audio and find our frames in the audio.
-After that we will use those frames to split the video and compine them randomly using the `moviepy` package.
+We will use the `librosa` package to analyze the audio from the video and find silent frames in it.
+After that we will use those frames to split the video and combine them randomly using the `moviepy` package.
 
-## Processing the audio frames in the video
+## Processing the audio frames from the video
 
 First we'll load the audio from our video file:
 
@@ -59,12 +61,12 @@ video_file_path = "resources/short_got.mp4"
 audio_data, sr = librosa.load(video_file_path)
 {% endhighlight %}
 
-```librosa.load``` will load the audio data from the file as a numpy array into ```audio_data``` and will set the sampling rate of the audio data in ```sr```, which is the number of samples per second in the audio.
+`librosa.load` will load the audio data from the file as a numpy array into `audio_data` and will set the sampling rate of the audio data in `sr`, which is the number of samples per second in the audio. In this case, the sample rate was 22,050 Hz, which means 22,050 samples per second.
 
 Lets take a look at the audio.
-In order to do that we can use ```librosa.display``` to plot the wave.
+In order to do that we can use `librosa.display` to plot the wave.
 
-The code for that will use librosa and matplotlib packages:
+The code for that will use `librosa` and `matplotlib` packages:
 
 {% highlight python %}
 import librosa
@@ -77,14 +79,14 @@ librosa.display.waveplot(audio_data)
 plt.show()
 {% endhighlight %}
 
-If we run the above code on our video file we will see the following wave plot:
+If we run the above code on our video file we will get the following wave plot:
 
 ![waveplot]({{ site.baseurl }}/images/got_remix/wave_plot.png)
 
-Seems like this audio is a bit noisy.
-We need to look at the "silent" parts of the audio and find a way to identify them.
+Seems like the audio for this scene is a bit noisy.
+We want to separate the video into sub clips, and will assume that there is a brief period of silence between them. In order to find the boundaries for each sub clip, we first need to define what "silence" looks like in our wave plot.
 
-Lets zoom into one of the parts in the audio and try to identify the "boundaries of silence":
+Let's zoom into one of the parts in the audio and try to identify the "boundaries of silence":
 
 ![waveplot]({{ site.baseurl }}/images/got_remix/wave_plot_pre_zoom.png)
 
@@ -94,7 +96,7 @@ We get a better and clearer image of what the audio looks like in the "silent" p
 
 It seems like we can declare that a location in the audio is silent if the wave is between `-0.02` to `0.02`.
 
-Let take a look at the plot with those limits:
+We can add these limit to the wave plot to see how much of it is "silent":
 
 {% highlight python %}
 import librosa
@@ -118,8 +120,10 @@ plt.show()
 
 ![waveplot]({{ site.baseurl }}/images/got_remix/wave_plot_limits.png)
 
-Once we set our limits, we can analyze the audio and try to find "silent" frames.
-We do that by setting a frame size and then iterating over the audio data, frame by frame, and checking if each frame has a value that is beyond our limits.
+Once we set our limits, we can analyze the audio and try to find "silences".
+We don't want to do this for each point since we have 22,050 of them per second, so we will define a `frame` as a small chunk of the audio file. We do that by setting a frame size in seconds and then iterating over the audio data, frame by frame, and checking for each frame if it has a value that exceeds our limits. If all values in the frame are between the limits, we can say the frame is "silent".
+
+Labeling "silent" frames:
 
 {% highlight python %}
 import math
@@ -156,9 +160,9 @@ for frame_num in range(int(num_of_frames)):
         silent_frames_indexes.append(frame_num)
 {% endhighlight %}
 
-What we've done here is find the indexes of silent frames in the audio. 
+What we've done here is find the indexes of "silent" frames in the audio. 
 
-In our case, each frame is the size of `0.01` so each frame's length is `0.01 * sample rate (22050)`.
+In this case the frame size is set to 0.1s, meaning that all data points in a 0.1s chunk of audio are considered a frame. This means that each frame contains `0.1 * sample rate (22050)` (2,250) data samples. This frame size worked well for this program, since the sub clips were to be longer than that length. You can play around with this size and see how it changes the result.
 
 For each frame, if the absolute maximum value of the frame is below our limit (`0.02`) we mark it as a "silent" frame and collect it in our `silent frames` list.
 
@@ -166,9 +170,9 @@ Once we collected all indexes of the "silent" frames, we can plot them on our au
 
 ![waveplot]({{ site.baseurl }}/images/got_remix/wave_plot_silent_frames.png)
 
-It seems like there's a lot of sections that we signaled as "silent".
+Looks like we marked a lot of sections as "silent"! We can aggregate consecutive "silent" frames, and plot the start of each "silent" sequence. 
 
-We can aggregate them and take another look at a cleaner plot.
+Let's take another look at the cleaner plot:
 
 {% highlight python %}
 # Aggregate the frames into sections of silent frames
@@ -180,7 +184,9 @@ for index, frame_num in enumerate(silent_frames_indexes[1:]):
 
 ![waveplot]({{ site.baseurl }}/images/got_remix/wave_plot_aggregated_silent_frames.png)
 
-Now we can start splitting up the video into the parts that are between the "silent" frames markers.
+We can now use the beginning of each "silent" sequence as the beginning of each sub clip in the video. We will split the video accordingly, meaning we need to save a list of the start of each "silent" sequence and the end of the desired frame. For finding the end of the frame we will use the sample just before the start of the next "silent" sequence.
+
+We will create a list of audio frames, each with a start and end index:
 
 {% highlight python %}
 # Zip the frames together so we'll have a complete list of frames
@@ -195,20 +201,22 @@ if frames[-1][1] < len(audio_data):
    frames.append((frames[-1][1] + 1, len(audio_data))) 
 {% endhighlight %}
 
-That's it, we have everything we need in order to create our new video of Sam in the Citadel.
+That's it, we have everything we need in order to create our new (longer and better!) video of Sam's Citadel chores.
+
+Yes, Sam, it will be magnificent.
 
 ![waveplot]({{ site.baseurl }}/images/got_remix/sam_in_the_citadel.gif)
 
 ## Creating the video mix
 
-Once we have our audio frames, we can use them for creating our new video.
+Now that we have a list of each audio frame's start and end indexes, we can use it for creating our new video.
 
-In this part we will convert the audio frames to the video frames, 
-split the video to those frames and combine them randomly into a new video.
+In this part we will convert the audio indexes to video timestamps, 
+split the video using those timestamps and combine them randomly into a new video.
 
 ![hot_py]({{ site.baseurl }}/images/got_remix/hot_py.jpg)
 
-First, lets load the movie using the ```moviepy``` module:
+First, lets load the movie using the `moviepy` module:
 
 {% highlight python %}
 from moviepy.video.io.VideoFileClip import VideoFileClip
@@ -216,7 +224,9 @@ from moviepy.video.io.VideoFileClip import VideoFileClip
 video_clip = VideoFileClip(video_file_path)
 {% endhighlight %}
 
-Next, we'll go over all of our selected frames and create sub video clip of them:
+Next, we'll convert each audio frame's start and end index to a video timestamp (MoviePy requires timestamps in seconds). We can convert sample index to timestamp by dividing the index by the sample rate: the timestamp for the 1000th sample will be `1000 / 22050`, ~0.0453.
+
+We will then use these timestamps to cut the video and save each sub clip:
 
 {% highlight python %}
 sub_clips = []
@@ -233,7 +243,7 @@ for frame_index, frame in enumerate(frames):
     sub_clips.append(sub_clip)
 {% endhighlight %}
 
-Now we can check a few examples:
+Let's take a look at some example sub clips:
 
 <video width="480" height="320" controls="controls">
   <source src="/images/got_remix/frame10.mp4" type="video/mp4">
@@ -251,11 +261,11 @@ Now we can check a few examples:
   <source src="/images/got_remix/frame5.mp4" type="video/mp4">
 </video>
 
-Next step is to mix those sub clips that we created into a new video.
+The next step is to mix the sub clips that we created into a new video.
 We can create a new video that is longer than the original video by 
 combining the same sub clips again and again in a random order.
 
-Lets create a new video clip that is 5 minutes 
+We will create a new video clip that's 5 minutes long
 (you can create longer clips but for this example, let's keep it short):
 
 {% highlight python %}
@@ -300,11 +310,11 @@ concat_clip = concatenate_videoclips(sub_clips, method="compose")
 concat_clip.write_videofile("resources/got_mix.mp4")
 {% endhighlight %}
 
-The result will be something like:
+The result will look something like:
 
 <iframe width="420" height="315" src="http://www.youtube.com/embed/hI4Ed9ejEuU" frameborder="0" allowfullscreen></iframe>
 
-That's it, now we have a longer version of sam in the Citadel.
+That's it, we now have a longer version of Sam working in the Citadel!
 
 Source code can be found on [github](https://github.com/kazuar/got_remix).
 
@@ -312,7 +322,7 @@ Source code can be found on [github](https://github.com/kazuar/got_remix).
 
 You're probably wondering, what else we can do with this?
 
-Well, I got only one things to say about that:
+Well, I have only one thing to say about that:
 
 ![OYSTER, CLAMS and COCKLES]({{ site.baseurl }}/images/got_remix/oysters_clams_and_cockles_meme.jpg)
 
