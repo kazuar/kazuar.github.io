@@ -6,14 +6,14 @@ tags:
 comments: true
 ---
 
-<iframe width="420" height="315" src="http://www.youtube.com/embed/hI4Ed9ejEuU" frameborder="0" allowfullscreen></iframe>
+<iframe width="420" height="315" src="http://www.youtube.com/embed/azU3I1rwNv8" frameborder="0" allowfullscreen></iframe>
 
-As a fan of `Game of Thrones`, I couldn't wait for it to return for a 7th season. Watching the season premier, I greatly enjoyed that great scene of Sam doing his chores at the Citadel.
+As a fan of Game of Thrones, I couldn't wait for it to return for a 7th season. Watching the season premier, I greatly enjoyed that iconic scene of Sam doing his chores at the Citadel.
 
 I enjoyed it so much that I wanted to see more of it... _much more of it_.
 
-In this post we'll take the short video compilation of sam cleaning the Citadel,
-we will split it to multiple sub clips and create a video of sam cleaning the Citadel using a random mix of those sub clips.
+In this post we'll take the short video compilation of Sam cleaning the Citadel,
+we will split it to multiple sub clips and create a video of Sam cleaning the Citadel using a random mix of those sub clips.
 
 Now, it would have taken me about five minutes to do all of this manually by splitting the video and then combining all the parts using some video editing program. But why would I waste five minutes when I can spend a whole weekend doing the same thing with Python?
 
@@ -52,12 +52,19 @@ progressbar
 We will use the `librosa` package to analyze the audio from the video and find silent frames in it.
 After that we will use those frames to split the video and combine them randomly using the `moviepy` package.
 
+You may also need to install `ffmpeg` on your computer for processing the video files, since it's needed for `MoviePy` to run.
+On OSX, you can install `ffmpeg` by running the following command line:
+
+{% highlight bash %}
+brew install ffmpeg
+{% endhighlight %}
+
 ## Processing the audio frames from the video
 
 First we'll load the audio from our video file:
 
 {% highlight python %}
-video_file_path = "resources/short_got.mp4"
+video_file_path = "resources/sam_citadel.mp4"
 audio_data, sr = librosa.load(video_file_path)
 {% endhighlight %}
 
@@ -73,7 +80,7 @@ import librosa
 import librosa.display
 import matplotlib.pyplot as plt
 
-video_file_path = "resources/short_got.mp4"
+video_file_path = "resources/sam_citadel.mp4"
 audio_data, sr = librosa.load(video_file_path)
 librosa.display.waveplot(audio_data)
 plt.show()
@@ -104,7 +111,7 @@ import librosa.display
 import matplotlib.pyplot as plt
 
 # Load audio from file
-video_file_path = "resources/short_got.mp4"
+video_file_path = "resources/sam_citadel.mp4"
 audio_data, sr = librosa.load(video_file_path)
 
 # Display wave plot
@@ -119,6 +126,14 @@ plt.show()
 {% endhighlight %}
 
 ![waveplot]({{ site.baseurl }}/images/got_remix/wave_plot_limits.png)
+
+We can zoom into one of the parts in the audio and check our “boundaries of silence”:
+
+![waveplot]({{ site.baseurl }}/images/got_remix/wave_plot_limits_pre_zoom.png)
+
+We can see that the boundaries we created contain the "silent" part of the audio. Seems like we might have been able to set a lower limit:
+
+![waveplot]({{ site.baseurl }}/images/got_remix/wave_plot_limits_zoom.png)
 
 Once we set our limits, we can analyze the audio and try to find "silences".
 We don't want to do this for each point since we have 22,050 of them per second, so we will define a `frame` as a small chunk of the audio file. We do that by setting a frame size in seconds and then iterating over the audio data, frame by frame, and checking for each frame if it has a value that exceeds our limits. If all values in the frame are between the limits, we can say the frame is "silent".
@@ -162,43 +177,53 @@ for frame_num in range(int(num_of_frames)):
 
 What we've done here is find the indexes of "silent" frames in the audio. 
 
-In this case the frame size is set to 0.1s, meaning that all data points in a 0.1s chunk of audio are considered a frame. This means that each frame contains `0.1 * sample rate (22050)` (2,250) data samples. This frame size worked well for this program, since the sub clips were to be longer than that length. You can play around with this size and see how it changes the result.
+In this case the frame size is set to 0.1s, meaning that all data points in a 0.1s chunk of audio are considered a frame. This means that each frame contains `0.1 * sample rate (22050)` (2,250) data samples. This frame size worked well for this program, since we expect the sub clips to be longer than that. You can play around with this size and see how it changes the result.
 
-For each frame, if the absolute maximum value of the frame is below our limit (`0.02`) we mark it as a "silent" frame and collect it in our `silent frames` list.
+For each frame, if the maximum absolute value of the frame is below our limit (`0.02`) we mark it as a "silent" frame and collect it in our `silent_frames` list.
 
 Once we collected all indexes of the "silent" frames, we can plot them on our audio wave:
 
 ![waveplot]({{ site.baseurl }}/images/got_remix/wave_plot_silent_frames.png)
 
-Looks like we marked a lot of sections as "silent"! We can aggregate consecutive "silent" frames, and plot the start of each "silent" sequence. 
-
-Let's take another look at the cleaner plot:
+Looks like we marked a lot of sections as "silent"! We can aggregate consecutive "silent" frames, and plot the start of each "silent" sequence:
 
 {% highlight python %}
 # Aggregate the frames into sections of silent frames
-aggregated_frames = [silent_frames_indexes[0]]
-for index, frame_num in enumerate(silent_frames_indexes[1:]):
-    if frame_num - silent_frames_indexes[index] > FRAME_MIN_SIZE:
-        aggregated_frames.append(frame_num)
+aggregated_frames = [(silent_frames[0], 0)]
+    for index, frame_num in enumerate(silent_frames[1:]):
+        # Check if we have a large enough frame
+        if frame_num - silent_frames[index] > FRAME_MIN_SIZE:
+            # Find the local minimum in the frame and set it as the frame start / end location
+            start = int(frame_num * frame_len)
+            stop = int((frame_num * frame_len) + (FRAME_DURATION * FRAME_MIN_SIZE * sr))
+            frame = map(abs, audio_data[start:stop])
+            min_val_index = frame.index(min(frame)) + (frame_num * frame_len)
+            aggregated_frames.append((frame_num, min_val_index))
 {% endhighlight %}
+
+In this code section, we aggregated the sections of silent frames in order to create longer frames. These frames will be used later for splitting our video into sub clips, then mixing them together for our new Sam in the Citadel video mix. As we want to make sure that our frames are long enough, we also check that our aggregated frames are more than 3 frames long. This is set using the `FRAME_MIN_SIZE` value.
+
+We also added a functionality that searches for the lowest local minimum in our audio. We need this feature so that when we cut our audio/video into sub clips we will end each sub clip at the most silent point that we can find in our "silent" frames.
+
+Let's take another look at the cleaner plot:
 
 ![waveplot]({{ site.baseurl }}/images/got_remix/wave_plot_aggregated_silent_frames.png)
 
-We can now use the beginning of each "silent" sequence as the beginning of each sub clip in the video. We will split the video accordingly, meaning we need to save a list of the start of each "silent" sequence and the end of the desired frame. For finding the end of the frame we will use the sample just before the start of the next "silent" sequence.
+We can now use the most silent point of each "silent" sequence as the beginning of each sub clip in the video. We will split the video accordingly, meaning we need to save a list of the start of each "silent" sequence and the end of the desired frame. For finding the end of the frame we will use the sample just before the start of the next "silent" sequence.
 
 We will create a list of audio frames, each with a start and end index:
 
 {% highlight python %}
 # Zip the frames together so we'll have a complete list of frames
 frames = zip(
-    [int(frame*frame_len) for frame in aggregated_frames], 
-    [int(frame*frame_len) - 1 for frame in aggregated_frames][1:]
+    [frame[1] for frame in aggregated_frames], 
+    [frame[1] - 1 for frame in aggregated_frames][1:]
 )
 
 # Check if we calculated frames until the end of the file.
 # If not, add another frame until the end of the file.
 if frames[-1][1] < len(audio_data):
-   frames.append((frames[-1][1] + 1, len(audio_data))) 
+    frames[-1] = (frames[-1][0], len(audio_data))
 {% endhighlight %}
 
 That's it, we have everything we need in order to create our new (longer and better!) video of Sam's Citadel chores.
@@ -216,7 +241,7 @@ split the video using those timestamps and combine them randomly into a new vide
 
 ![hot_py]({{ site.baseurl }}/images/got_remix/hot_py.jpg)
 
-First, lets load the movie using the `moviepy` module:
+First, let's load the movie using the `moviepy` module:
 
 {% highlight python %}
 from moviepy.video.io.VideoFileClip import VideoFileClip
@@ -224,7 +249,7 @@ from moviepy.video.io.VideoFileClip import VideoFileClip
 video_clip = VideoFileClip(video_file_path)
 {% endhighlight %}
 
-Next, we'll convert each audio frame's start and end index to a video timestamp (MoviePy requires timestamps in seconds). We can convert sample index to timestamp by dividing the index by the sample rate: the timestamp for the 1000th sample will be `1000 / 22050`, ~0.0453.
+Next, we'll convert each audio frame's start and end index to a video timestamp (MoviePy requires timestamps in seconds). We can convert sample indexes to timestamps by dividing the index by the sample rate. For example, the timestamp for the 1000th sample will be `1000 / 22050`, ~0.0453.
 
 We will then use these timestamps to cut the video and save each sub clip:
 
