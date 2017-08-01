@@ -380,7 +380,7 @@ var BarChartView = widgets.DOMWidgetView.extend({
             .width(600)
             .height(400);
         barChart.colorSchema(colors.colorSchemas.extendedOrangeColorSchema);
-        var data = this.model.get("model_data");
+        var data = this.model.get("_model_data");
         barContainer.datum(data).call(barChart);        
     }
 });
