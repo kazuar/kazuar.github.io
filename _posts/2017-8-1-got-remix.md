@@ -6,7 +6,7 @@ tags:
 comments: true
 ---
 
-<iframe width="420" height="315" src="http://www.youtube.com/embed/azU3I1rwNv8" frameborder="0" allowfullscreen></iframe>
+<iframe width="420" height="315" src="https://www.youtube.com/embed/azU3I1rwNv8" frameborder="0" allowfullscreen></iframe>
 
 As a fan of Game of Thrones, I couldn't wait for it to return for a 7th season. Watching the season premier, I greatly enjoyed that iconic scene of Sam doing his chores at the Citadel.
 
