@@ -337,7 +337,7 @@ concat_clip.write_videofile("resources/got_mix.mp4")
 
 The result will look something like:
 
-<iframe width="420" height="315" src="http://www.youtube.com/embed/hI4Ed9ejEuU" frameborder="0" allowfullscreen></iframe>
+<iframe width="420" height="315" src="https://www.youtube.com/embed/hI4Ed9ejEuU" frameborder="0" allowfullscreen></iframe>
 
 That's it, we now have a longer version of Sam working in the Citadel!
 
