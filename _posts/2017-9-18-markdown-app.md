@@ -24,7 +24,7 @@ There are a couple of reason why I started this project.
 
 Recently, I've been seeing more and more impressive and interesting things that you can do with JavaScript, and I've wanted to do something with [Electron](https://electron.atom.io/) for a while now.
 
-JavaScript always felt weird for me to write and I've always tried to avoid it. Every time I tried to do something with Javascript, I always felt like I was just hammering down on the keyboard until I got whatever it was to work.
+JavaScript always felt weird for me to write and I've always tried to avoid it. Every time I tried to do something with JavaScript, I always felt like I was just hammering down on the keyboard until I got whatever it was to work.
 
 ![hammer_down]({{ site.baseurl }}/images/markdown_app/hammer_down.gif)
 
@@ -41,9 +41,9 @@ Some of the requirements I thought about for the markdown app
 
 1. Editor and preview panes.
 2. Split screen between the editor and preview panes that can be dynamically moved. 
-3. Support for code blocks and code language highlightings.
-4. Support for saving and syncing notes on github.
-5. A heirarchy of notebooks and markdown notes.
+3. Support for code blocks and code language highlighting.
+4. Support for saving and syncing notes on GitHub.
+5. A hierarchy of notebooks and markdown notes.
 6. Support for Latex / math equations in the editor.
 7. Ability to group different notebooks with a shared topic.
 8. Ability to share some notebooks on GitHub and other notebooks on Dropbox, Google Docs, etc.
@@ -255,7 +255,7 @@ Now that we have a working template for our project with Electron and React, we 
 
 What we created until now is great for development but eventually we would want to create the distribution versions of the app for OS X, Windows and Linux.
 
-I also didn't like that we have to seperately run the React server and Electron app in two different command line shells.
+I also didn't like that we have to separately run the React server and Electron app in two different command line shells.
 
 After doing some research on the topic, I found the following post [From React to an Electron app ready for production](https://medium.com/@kitze/%EF%B8%8F-from-react-to-an-electron-app-ready-for-production-a0468ecb1da3) by [@thekitze](https://twitter.com/thekitze) which helped me a lot in this process.
 
@@ -477,7 +477,7 @@ Install the [react-split-pane](https://github.com/tomkp/react-split-pane) packag
 yarn add react-split-pane
 ```
 
-Add the following javascript code to the `src/App.js` file:
+Add the following JavaScript code to the `src/App.js` file:
 
 * Import `react-split-pane`:
 
@@ -570,7 +570,7 @@ We would want to set up the panes as they are usually set up in markdown editors
 ### Creating the editor pane
 
 Let's start with the editor pane.
-For this we will use [CodeMirror](https://codemirror.net/) which is a javascript text editor.
+For this we will use [CodeMirror](https://codemirror.net/) which is a JavaScript text editor.
 
 Install the react package for code mirror [React-CodeMirror](https://github.com/JedWatson/react-codemirror). Because of a small issue of "[Code mirror value doesn't update with state change](https://github.com/JedWatson/react-codemirror/issues/106)" in `React-CodeMirror`, we will install `@skidding/react-codemirror` which solves that issue:
 
@@ -628,7 +628,7 @@ class Editor extends Component {
 export default Editor;
 ```
 
-In the `src/App.js` file we will import `editor.js` (add to the beggining of the file):
+In the `src/App.js` file we will import `editor.js` (add to the beginning of the file):
 
 ```javascript
 import Editor from './editor.js';
