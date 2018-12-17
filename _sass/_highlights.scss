@@ -10,6 +10,14 @@
   overflow: scroll;
 }
 
+.highlighter-rouge {
+	background: rgba(0,0,0,.05);
+	color: rgba(0,0,0,.84);
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	font-weight: 700;
+}
+
 code {
   font-family:'Bitstream Vera Sans Mono','Courier', monospace;
 }

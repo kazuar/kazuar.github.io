@@ -12,6 +12,8 @@ comments: true
 
 ![mook]({{ site.baseurl }}/images/markdown_app/mook.png)
 
+This post was also published in [FreeCodeCamp](https://medium.freecodecamp.org/): [Here’s how I created a markdown app with Electron and React](https://medium.freecodecamp.org/heres-how-i-created-a-markdown-app-with-electron-and-react-1e902f8601ca)
+
 This blog post is going to be a step-by-step tutorial on how to create a basic markdown application based on [Electron](https://electron.atom.io/) and [React](https://facebook.github.io/react/).
 
 I'll describe why, how and what I used to create the markdown app which I call - [Mook](https://github.com/kazuar/mook).
